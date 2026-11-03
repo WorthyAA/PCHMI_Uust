@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Прототип 5: зигзагообразный лендинг — Шеринг-платформа</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; }
+.container {
+  max-width: 1200px; margin: 0 auto; padding: 0 16px;
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px;
+}
+header {
+  grid-column: 1 / -1; background: #2563eb; color: #fff;
+  padding: 20px; border-radius: 12px;
+}
+header h1 { font-size: 1.5rem; }
+header p { opacity: 0.9; font-size: 0.9rem; }
+nav { grid-column: 1 / -1; }
+nav ul {
+  display: flex; gap: 16px; list-style: none;
+  background: #1e40af; padding: 12px 20px; border-radius: 12px;
+}
+nav a { color: #fff; text-decoration: none; font-weight: 500; }
+section { grid-column: 1 / -1; }
+.zigzag {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+  align-items: center;
+}
+.zigzag .text h2 { font-size: 1.4rem; margin-bottom: 12px; }
+.zigzag .text p { color: #64748b; margin-bottom: 16px; }
+.zigzag .visual {
+  background: #fff; border-radius: 12px; padding: 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center;
+  min-height: 180px; display: flex; align-items: center; justify-content: center;
+}
+.zigzag.reverse .text { order: 2; }
+.zigzag.reverse .visual { order: 1; }
+.btn {
+  display: inline-block; padding: 10px 24px; background: #2563eb;
+  color: #fff; border: none; border-radius: 8px; font-weight: 600;
+  cursor: pointer; text-decoration: none;
+}
+.btn:hover { background: #1d4ed8; }
+.btn-green { background: #10b981; }
+.btn-green:hover { background: #059669; }
+.cta {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: #fff; padding: 40px 32px; border-radius: 12px; text-align: center;
+}
+.cta h2 { font-size: 1.6rem; margin-bottom: 12px; }
+.cta p { opacity: 0.9; margin-bottom: 20px; }
+footer {
+  grid-column: 1 / -1; background: #1e293b; color: #94a3b8;
+  padding: 16px 20px; border-radius: 12px; text-align: center; font-size: 0.85rem;
+}
+@media (max-width: 768px) {
+  .zigzag { grid-template-columns: 1fr; }
+  .zigzag.reverse .text { order: 1; }
+  .zigzag.reverse .visual { order: 2; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Шеринг-платформа</h1>
+    <p>Управление долевыми арендными обязательствами в Уфе</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#">Объекты</a></li>
+      <li><a href="#">Заявки</a></li>
+      <li><a href="#">Договоры</a></li>
+      <li><a href="#">Депозиты</a></li>
+      <li><a href="#">Профиль</a></li>
+    </ul>
+  </nav>
+
+  <section>
+    <div class="zigzag">
+      <div class="text">
+        <h2>Найдите совместимого соарендатора</h2>
+        <p>Скоринг-алгоритм оценивает кандидатов по бюджету, графику сна и работы, бытовым привычкам. Вы видите процент совместимости до подачи заявки.</p>
+        <a href="#" class="btn">Начать поиск</a>
+      </div>
+      <div class="visual">Скоринг-матрица совместимости</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="zigzag reverse">
+      <div class="text">
+        <h2>Депозит под защитой эскроу</h2>
+        <p>Залоговые средства замораживаются на счёте платформы и возвращаются только после завершения аренды или по решению арбитража. Никаких рисков потери депозита.</p>
+        <a href="#" class="btn btn-green">Как работает эскроу</a>
+      </div>
+      <div class="visual">Схема эскроу-счёта</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="zigzag">
+      <div class="text">
+        <h2>Цифровой договор соаренды</h2>
+        <p>Юридически значимый договор формируется автоматически из лота и оферты. Подписание в два клика, хранение в личном кабинете.</p>
+        <a href="#" class="btn">Создать договор</a>
+      </div>
+      <div class="visual">Шаблон договора</div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Готовы снизить аренду на 30–50%?</h2>
+    <p>Присоединяйтесь к 340+ успешным заселениям в Уфе за 2026 год</p>
+    <a href="#" class="btn btn-green">Начать сейчас</a>
+  </section>
+
+  <footer>Шеринг-платформа © 2026 · Управление долевыми арендными обязательствами</footer>
+</div>
+</body>
+</html>

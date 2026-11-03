@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Прототип 3: мозаичная компоновка — Шеринг-платформа</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 24px;
+      position: relative;
+    }
+
+    .container {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    header {
+      grid-column: 1 / -1;
+      background: #2563eb;
+      color: #fff;
+      padding: 24px;
+      border-radius: 12px;
+    }
+
+    header h1 {
+      font-size: 32px;
+      line-height: 48px;
+    }
+
+    header p {
+      font-size: 16px;
+      line-height: 24px;
+      margin-top: 24px;
+    }
+
+    nav {
+      grid-column: 1 / -1;
+    }
+
+    nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      list-style: none;
+      background: #1e40af;
+      padding: 12px 24px;
+      border-radius: 12px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-block;
+      padding: 12px 24px;
+      line-height: 24px;
+      border-radius: 8px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h3 {
+      font-size: 16px;
+      line-height: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card .price {
+      color: #2563eb;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .card p {
+      font-size: 16px;
+      line-height: 24px;
+      margin-top: 24px;
+    }
+
+    .card .rules {
+      font-size: 12px;
+      line-height: 24px;
+      color: #64748b;
+      margin-top: 24px;
+    }
+
+    .card-featured {
+      grid-column: span 6;
+      padding: 24px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card-featured h2 {
+      font-size: 24px;
+      line-height: 48px;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      align-self: flex-start;
+      height: 24px;
+      padding: 0 8px;
+      background: #10b981;
+      color: #fff;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .card-small {
+      grid-column: span 3;
+    }
+
+    .card-small p {
+      font-size: 12px;
+      line-height: 24px;
+      color: #64748b;
+      margin-top: 24px;
+    }
+
+    .card-regular {
+      grid-column: span 4;
+    }
+
+    .stat {
+      font-size: 32px;
+      line-height: 48px;
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    footer {
+      grid-column: 1 / -1;
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 12px;
+      line-height: 24px;
+    }
+
+    .grid-toggle {
+      position: fixed;
+      top: 16px;
+      right: 12px;
+      z-index: 10001;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border: 1px solid rgba(37, 99, 235, 0.25);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #1d4ed8;
+      font: 600 13px/16px system-ui, -apple-system, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+    }
+
+    .grid-toggle:hover {
+      background: #ffffff;
+    }
+
+    .grid-toggle-h {
+      top: 56px;
+    }
+
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      padding: 0 16px;
+      display: none;
+      pointer-events: none;
+      z-index: 10000;
+    }
+
+    .grid-overlay.visible {
+      display: block;
+    }
+
+    .grid-overlay__grid {
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .grid-overlay__col {
+      position: relative;
+      border-radius: 4px;
+      background: rgba(37, 99, 235, 0.08);
+      outline: 1px dashed rgba(37, 99, 235, 0.18);
+    }
+
+    .grid-overlay__col span {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font: 700 12px/16px system-ui, -apple-system, sans-serif;
+      color: rgba(37, 99, 235, 0.75);
+      user-select: none;
+    }
+
+    .grid-overlay-h {
+      position: absolute;
+      inset: 0;
+      padding: 0 16px;
+      display: none;
+      pointer-events: none;
+      z-index: 9999;
+      background-image: repeating-linear-gradient(to bottom, rgba(231, 76, 60, 0.28) 0, rgba(231, 76, 60, 0.28) 1px, transparent 1px, transparent 24px);
+      background-clip: content-box;
+    }
+
+    .grid-overlay-h.visible {
+      display: block;
+    }
+
+    @media (min-width: 1440px) {
+      .card-featured {
+        padding: 48px;
+      }
+    }
+
+    @media (max-width: 1199px) {
+      header h1 {
+        font-size: 24px;
+        line-height: 48px;
+      }
+
+      .card-featured h2 {
+        font-size: 20px;
+        line-height: 48px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .card-featured {
+        grid-column: 1 / -1;
+      }
+
+      .card-small {
+        grid-column: span 6;
+      }
+
+      .card-regular {
+        grid-column: span 6;
+      }
+
+      .card-regular:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 767px) {
+      header {
+        padding: 24px;
+      }
+
+      header h1 {
+        font-size: 20px;
+        line-height: 24px;
+      }
+
+      header p {
+        font-size: 12px;
+        line-height: 24px;
+      }
+
+      nav ul {
+        padding: 12px 12px;
+      }
+
+      nav a {
+        padding: 12px 12px;
+        font-size: 14px;
+      }
+
+      .card-featured,
+      .card-small,
+      .card-regular {
+        grid-column: 1 / -1;
+      }
+
+      .card,
+      .card-featured {
+        padding: 24px;
+      }
+    }
+
+    @media (max-width: 479px) {
+      nav ul {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 24px;
+      }
+
+      nav a {
+        display: block;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 359px) {
+      header h1 {
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="grid-toggle" id="gridToggle" type="button" data-show="Показать сетку" data-hide="Скрыть сетку">Скрыть сетку</button>
+  <button class="grid-toggle grid-toggle-h" id="gridToggleH" type="button" data-show="Показать горизонтальную сетку" data-hide="Скрыть горизонтальную сетку">Скрыть горизонтальную сетку</button>
+
+  <div class="container">
+    <div class="grid-overlay visible" id="gridOverlay" aria-hidden="false">
+      <div class="grid-overlay__grid" id="gridOverlayGrid"></div>
+    </div>
+    <div class="grid-overlay-h visible" id="gridOverlayH" aria-hidden="false"></div>
+
+    <header>
+      <h1>Шеринг-платформа</h1>
+      <p>Управление долевыми арендными обязательствами в Уфе</p>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="#">Объекты</a></li>
+        <li><a href="#">Заявки</a></li>
+        <li><a href="#">Договоры</a></li>
+        <li><a href="#">Депозиты</a></li>
+        <li><a href="#">Профиль</a></li>
+      </ul>
+    </nav>
+
+    <div class="card card-featured">
+      <span class="badge">Избранный объект</span>
+      <h2>3-комн. квартира, Октябрьский район</h2>
+      <div class="price">16 000 ₽ / мес. (доля)</div>
+      <p>Просторная комната 18 м² в квартире с двумя верифицированными соарендаторами. Скоринг-совместимость 92%. Рядом парк и метро.</p>
+      <div class="rules">Тишина после 23:00 · Без курения · Депозит 8 000 ₽ · Эскроу</div>
+    </div>
+
+    <div class="card card-small">
+      <h3>Статистика платформы</h3>
+      <div class="stat">340+</div>
+      <p>успешных заселений за 2026 год</p>
+    </div>
+
+    <div class="card card-small">
+      <h3>Гарантии</h3>
+      <p>Депозиты заморожены на эскроу-счетах. Возврат только по решению арбитража.</p>
+    </div>
+
+    <div class="card card-regular">
+      <h3>2-комн., Советский район</h3>
+      <div class="price">15 500 ₽ / мес.</div>
+      <p>Комната 12 м². Длительный срок.</p>
+      <div class="rules">Тишина после 22:00</div>
+    </div>
+
+    <div class="card card-regular">
+      <h3>2-комн., Кировский район</h3>
+      <div class="price">20 000 ₽ / мес.</div>
+      <p>Комната 16 м². Новая квартира.</p>
+      <div class="rules">Без животных</div>
+    </div>
+
+    <div class="card card-regular">
+      <h3>1-комн., Дёмский район</h3>
+      <div class="price">12 000 ₽ / мес.</div>
+      <p>Комната 10 м². Эконом-вариант.</p>
+      <div class="rules">Тишина после 23:00</div>
+    </div>
+
+    <footer>Шеринг-платформа © 2026 · Управление долевыми арендными обязательствами</footer>
+  </div>
+
+  <script>
+    (function () {
+      var overlay = document.getElementById('gridOverlay');
+      var grid = document.getElementById('gridOverlayGrid');
+      var button = document.getElementById('gridToggle');
+      var overlayH = document.getElementById('gridOverlayH');
+      var buttonH = document.getElementById('gridToggleH');
+
+      if (overlay && grid && button) {
+        for (var i = 1; i <= 12; i += 1) {
+          var col = document.createElement('div');
+          col.className = 'grid-overlay__col';
+
+          var num = document.createElement('span');
+          num.textContent = String(i);
+
+          col.appendChild(num);
+          grid.appendChild(col);
+        }
+      }
+
+      function sync(el, btn) {
+        var visible = el.classList.contains('visible');
+        btn.textContent = visible ? btn.getAttribute('data-hide') : btn.getAttribute('data-show');
+        btn.setAttribute('aria-pressed', String(visible));
+        el.setAttribute('aria-hidden', String(!visible));
+      }
+
+      function bind(el, btn) {
+        if (!el || !btn) {
+          return;
+        }
+        btn.addEventListener('click', function () {
+          el.classList.toggle('visible');
+          sync(el, btn);
+        });
+        sync(el, btn);
+      }
+
+      bind(overlay, button);
+      bind(overlayH, buttonH);
+    })();
+  </script>
+</body>
+</html>

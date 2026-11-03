@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Прототип 4: дашборд с боковой навигацией — Шеринг-платформа</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; }
+.container {
+  max-width: 1200px; margin: 0 auto; padding: 0 16px;
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px;
+}
+header {
+  grid-column: 1 / -1; background: #2563eb; color: #fff;
+  padding: 20px; border-radius: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+header h1 { font-size: 1.3rem; }
+header .user { font-size: 0.9rem; opacity: 0.9; }
+.sidebar {
+  grid-column: span 3;
+  background: #fff; border-radius: 12px; padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  align-self: start;
+}
+.sidebar ul { list-style: none; }
+.sidebar li { margin-bottom: 12px; }
+.sidebar a {
+  display: block; padding: 10px 12px; border-radius: 8px;
+  text-decoration: none; color: #1e293b; font-weight: 500;
+}
+.sidebar a.active { background: #2563eb; color: #fff; }
+.sidebar a:hover:not(.active) { background: #f1f5f9; }
+.main {
+  grid-column: span 9;
+  display: flex; flex-direction: column; gap: 24px;
+}
+.page-title { font-size: 1.4rem; font-weight: 700; }
+.widgets {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.widget {
+  background: #fff; padding: 20px; border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.widget .label { font-size: 0.85rem; color: #64748b; margin-bottom: 6px; }
+.widget .value { font-size: 1.6rem; font-weight: 700; }
+.widget .value.green { color: #10b981; }
+.widget .value.blue { color: #2563eb; }
+.card {
+  background: #fff; padding: 20px; border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.card h3 { margin-bottom: 12px; }
+.list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid #e2e8f0;
+}
+.list-item:last-child { border-bottom: none; }
+.list-item .info { font-size: 0.9rem; }
+.list-item .status {
+  padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;
+}
+.status.pending { background: #fef3c7; color: #b45309; }
+.status.approved { background: #d1fae5; color: #047857; }
+footer {
+  grid-column: 1 / -1; background: #1e293b; color: #94a3b8;
+  padding: 16px 20px; border-radius: 12px; text-align: center; font-size: 0.85rem;
+}
+@media (max-width: 768px) {
+  .sidebar { grid-column: 1 / -1; }
+  .main { grid-column: 1 / -1; }
+  .widgets { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Шеринг-платформа</h1>
+    <span class="user">Личный кабинет</span>
+  </header>
+
+  <nav class="sidebar">
+    <ul>
+      <li><a href="#" class="active">Обзор</a></li>
+      <li><a href="#">Объекты</a></li>
+      <li><a href="#">Заявки</a></li>
+      <li><a href="#">Договоры</a></li>
+      <li><a href="#">Депозиты</a></li>
+      <li><a href="#">Профиль</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <h2 class="page-title">Обзор личного кабинета</h2>
+
+    <div class="widgets">
+      <div class="widget">
+        <div class="label">Активные заявки</div>
+        <div class="value blue">3</div>
+      </div>
+      <div class="widget">
+        <div class="label">Депозит на эскроу</div>
+        <div class="value green">18 000 ₽</div>
+      </div>
+      <div class="widget">
+        <div class="label">Ближайший платёж</div>
+        <div class="value">15 нояб</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Последние заявки</h3>
+      <div class="list-item">
+        <div class="info">2-комн., Октябрьский район — 18 000 ₽/мес.</div>
+        <span class="status approved">Одобрена</span>
+      </div>
+      <div class="list-item">
+        <div class="info">3-комн., Советский район — 15 500 ₽/мес.</div>
+        <span class="status pending">На рассмотрении</span>
+      </div>
+      <div class="list-item">
+        <div class="info">2-комн., Кировский район — 20 000 ₽/мес.</div>
+        <span class="status pending">На рассмотрении</span>
+      </div>
+    </div>
+  </main>
+
+  <footer>Шеринг-платформа © 2026 · Управление долевыми арендными обязательствами</footer>
+</div>
+</body>
+</html>
