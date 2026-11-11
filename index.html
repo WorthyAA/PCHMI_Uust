@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шеринг-платформа — Управление долевыми арендными обязательствами</title>
+<style>
+:root{
+  --bg:#f4f6fb; --surface:#ffffff; --surface-2:#f8faff; --line:#e3e8f2;
+  --text:#151d33; --muted:#657292; --faint:#8d99b5;
+  --blue:#2563eb; --blue-d:#1b45c4; --blue-l:#e8f0ff;
+  --green:#0ea472; --green-l:#e4f7ef;
+  --amber:#d98207; --amber-l:#fdf3e3;
+  --red:#dc3545; --red-l:#fdeced;
+  --violet:#7c4ddb; --violet-l:#f1ebfd;
+  --teal:#0d8ba3; --teal-l:#e3f5f9;
+  --r:12px;
+  --sh:0 1px 2px rgba(21,29,51,.06),0 6px 20px rgba(21,29,51,.05);
+  --sh-lg:0 20px 60px rgba(21,29,51,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:#eaeef7}
+::-webkit-scrollbar-thumb{background:#bcc8de;border:3px solid #eaeef7;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:var(--blue)}
+*{scrollbar-width:thin;scrollbar-color:#bcc8de #eaeef7}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+h1,h2,h3,h4{line-height:1.25;letter-spacing:-.01em}
+
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;
+  background:radial-gradient(760px 420px at 12% -5%,rgba(37,99,235,.13),transparent 62%),
+             radial-gradient(680px 400px at 92% 105%,rgba(14,164,114,.13),transparent 62%),var(--bg)}
+.login-card{width:min(430px,100%);background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh);padding:30px;animation:rise .4s ease}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.mark{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px;background:linear-gradient(140deg,var(--blue),var(--violet));box-shadow:0 8px 20px rgba(37,99,235,.28)}
+.login-head{display:flex;gap:13px;align-items:center;margin-bottom:22px}
+.login-head h1{font-size:19px}
+.login-head p{font-size:12px;color:var(--muted)}
+.login-card h2{font-size:16px;margin-bottom:3px}
+.login-card .lead{font-size:13px;color:var(--muted);margin-bottom:18px}
+.hint{margin-top:20px;padding-top:15px;border-top:1px solid var(--line)}
+.hint b{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:9px}
+.hint-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.hint-row:last-child{border:none}
+.hint-row code{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;background:var(--blue-l);color:var(--blue-d);padding:2px 7px;border-radius:5px}
+
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;outline:none;transition:.15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.13)}
+.field textarea{min-height:76px;resize:vertical}
+.field.err input,.field.err select{border-color:var(--red);background:var(--red-l)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:10px;padding:10px 17px;font-size:13px;font-weight:700;transition:.15s;white-space:nowrap}
+.btn:active{transform:scale(.975)}
+.btn-p{background:linear-gradient(140deg,var(--blue),var(--blue-d));color:#fff;box-shadow:0 5px 14px rgba(37,99,235,.24)}
+.btn-p:hover{filter:brightness(1.08)}
+.btn-g{background:linear-gradient(140deg,#12b981,var(--green));color:#fff;box-shadow:0 5px 14px rgba(14,164,114,.22)}
+.btn-g:hover{filter:brightness(1.06)}
+.btn-a{background:linear-gradient(140deg,#eda23a,var(--amber));color:#fff}
+.btn-r{background:linear-gradient(140deg,#e8505f,var(--red));color:#fff}
+.btn-v{background:linear-gradient(140deg,#9163e8,var(--violet));color:#fff}
+.btn-o{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn-o:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
+.btn-s{padding:7px 12px;font-size:12px;border-radius:9px}
+.btn-w{width:100%}
+.btn:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.5);box-shadow:none}
+.alert{background:var(--red-l);border:1px solid #f3c9cd;color:#a51f2c;border-radius:10px;padding:10px 13px;font-size:13px;margin-bottom:14px}
+
+.top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1220px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;flex:none}
+.brand .mark{width:34px;height:34px;font-size:15px;border-radius:10px;box-shadow:none}
+.brand b{font-size:14.5px}
+.nav{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{padding:8px 13px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap;transition:.15s}
+.nav button:hover{background:#eef2fa;color:var(--text)}
+.nav button.on{background:var(--blue-l);color:var(--blue-d)}
+.who{margin-left:auto;display:flex;align-items:center;gap:11px;flex:none}
+.who-i{text-align:right;line-height:1.25}
+.who-i b{display:block;font-size:13px}
+.who-i span{font-size:11px;color:var(--muted)}
+
+.main{max-width:1220px;margin:0 auto;padding:24px 18px 70px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:17px}
+.head h2{font-size:23px}
+.head p{font-size:13px;color:var(--muted);margin-top:4px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:19px;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(7px)}}
+.card+.card{margin-top:15px}
+.card h3{font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3::before{content:"";width:4px;height:15px;border-radius:3px;background:linear-gradient(var(--blue),var(--violet))}
+.grid{display:grid;gap:15px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.mt{margin-top:14px}
+.sp{flex:1}
+.muted{color:var(--muted);font-size:12.5px}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+
+.obj{display:flex;flex-direction:column;gap:8px;transition:.18s}
+.obj:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(21,29,51,.1);border-color:#cfd9ec}
+.obj h4{font-size:15px}
+.price{font-size:19px;font-weight:800;color:var(--blue);letter-spacing:-.02em}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;background:#eef2fa;color:#4a5878;border:1px solid var(--line)}
+.tag.g{background:var(--green-l);color:#08704e;border-color:#bfe8d7}
+.tag.a{background:var(--amber-l);color:#8a5305;border-color:#f2ddb6}
+.tag.r{background:var(--red-l);color:#a51f2c;border-color:#f3c9cd}
+.tag.b{background:var(--blue-l);color:var(--blue-d);border-color:#c9dbff}
+.tag.v{background:var(--violet-l);color:#5b32ad;border-color:#ddd0f8}
+.tag.t{background:var(--teal-l);color:#086477;border-color:#bde5ed}
+.bar{height:7px;border-radius:99px;background:#e9edf6;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green),#7ed957);transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.bar.warn i{background:linear-gradient(90deg,var(--amber),#f5c451)}
+.bar.bad i{background:linear-gradient(90deg,var(--red),#f2707e)}
+
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:11px}
+.filters .field{margin:0}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:11px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+th{background:var(--surface-2);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:10px 13px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 13px;border-bottom:1px solid #eef1f8;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface-2)}
+.empty{text-align:center;padding:36px 18px;color:var(--muted);font-size:13.5px}
+.empty .btn{margin-top:13px}
+.doc{background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:17px;font-size:13px;line-height:1.75}
+.doc h4{font-size:13.5px;margin-bottom:9px;letter-spacing:.02em}
+.signs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px}
+.sign{border:1.5px dashed var(--line);border-radius:10px;padding:11px;font-size:12px;color:var(--muted);text-align:center}
+.sign.ok{border-style:solid;border-color:#bfe8d7;background:var(--green-l);color:#08704e;font-weight:600}
+.fg{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.fg .full{grid-column:1/-1}
+.checks{display:flex;gap:16px;flex-wrap:wrap;margin:4px 0 14px}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer}
+.check input{width:17px;height:17px;accent-color:var(--blue);cursor:pointer}
+.note{background:var(--blue-l);border:1px solid #c9dbff;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#1c3f96;line-height:1.6}
+.note.a{background:var(--amber-l);border-color:#f2ddb6;color:#8a5305}
+.stat{display:flex;flex-direction:column;gap:2px;padding:14px 16px;background:var(--surface-2);border:1px solid var(--line);border-radius:11px}
+.stat b{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.stat span{font-size:11.5px;color:var(--muted);font-weight:600}
+
+.modal{position:fixed;inset:0;z-index:100;background:rgba(21,29,51,.5);backdrop-filter:blur(3px);display:grid;place-items:center;padding:20px;animation:fade .18s}
+.modal[hidden]{display:none}
+.modal-box{width:min(540px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:16px;box-shadow:var(--sh-lg);padding:24px;animation:rise .24s ease}
+.modal-box h3{font-size:17px;margin-bottom:7px}
+.modal-box .lead{font-size:13px;color:var(--muted);margin-bottom:15px;line-height:1.6}
+.kv{display:grid;grid-template-columns:1fr auto;gap:9px 16px;font-size:13px;margin-bottom:17px;padding:13px;background:var(--surface-2);border-radius:10px}
+.kv span{color:var(--muted)}
+.kv b{font-weight:700}
+.toasts{position:fixed;left:18px;bottom:18px;z-index:120;display:flex;flex-direction:column;gap:9px;max-width:350px}
+.toast{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:11px;box-shadow:var(--sh);padding:12px 15px;font-size:13px;display:flex;gap:10px;align-items:center;animation:slide .26s ease}
+.toast.g{border-left-color:var(--green)}.toast.r{border-left-color:var(--red)}.toast.a{border-left-color:var(--amber)}
+@keyframes slide{from{opacity:0;transform:translateX(-14px)}}
+.foot{border-top:1px solid var(--line);background:#fff;text-align:center;padding:18px;font-size:12px;color:var(--muted)}
+[hidden]{display:none!important}
+@media(max-width:940px){.g3{grid-template-columns:repeat(2,1fr)}.signs{grid-template-columns:1fr}}
+@media(max-width:660px){.top-in{flex-wrap:wrap}.nav{order:3;width:100%}.g2,.g3,.fg{grid-template-columns:1fr}.main{padding:17px 12px 60px}.head h2{font-size:20px}}
+</style>
+</head>
+<body>
+
+<section id="s-login" class="login-wrap">
+  <div class="login-card">
+    <div class="login-head">
+      <div class="mark">Ш</div>
+      <div><h1>Шеринг-платформа</h1><p>Управление долевыми арендными обязательствами</p></div>
+    </div>
+    <h2>Вход в систему</h2>
+    <p class="lead">Введите учётные данные для доступа к личному кабинету.</p>
+    <div id="login-err" class="alert" hidden></div>
+    <form id="f-login">
+      <div class="field"><label>Логин</label><input name="login" autocomplete="username" required placeholder="Введите логин"></div>
+      <div class="field"><label>Пароль</label><input name="password" type="password" autocomplete="current-password" required placeholder="Введите пароль"></div>
+      <button class="btn btn-p btn-w" type="submit">Войти</button>
+    </form>
+    <div class="hint">
+      <b>Учётные записи</b>
+      <div class="hint-row"><span>Искатель комнаты</span><span><code>smirnova</code> <code>1234</code></span></div>
+      <div class="hint-row"><span>Инициатор шеринга</span><span><code>khalilov</code> <code>1234</code></span></div>
+      <div class="hint-row"><span>Администратор</span><span><code>mustafina</code> <code>admin</code></span></div>
+    </div>
+  </div>
+</section>
+
+<div id="shell" hidden>
+  <header class="top">
+    <div class="top-in">
+      <div class="brand"><div class="mark">Ш</div><b>Шеринг-платформа</b></div>
+      <nav class="nav" id="nav"></nav>
+      <div class="who">
+        <div class="who-i"><b id="who-name"></b><span id="who-role"></span></div>
+        <button class="btn btn-s btn-o" data-act="logout">Выйти</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <section id="s-objects" hidden>
+      <div class="head"><div><h2>Объекты</h2><p>Подбор жилья по бюджету и графику проживания</p></div></div>
+      <div class="card">
+        <div class="filters">
+          <div class="field"><label>Бюджет до, ₽</label><input id="fl-budget" type="number" placeholder="20000"></div>
+          <div class="field"><label>График сна / работы</label><select id="fl-schedule"><option value="">Любой</option><option value="day">Дневная работа</option><option value="night">Ночные смены</option><option value="remote">Удалёнка</option></select></div>
+          <div class="field"><label>Район</label><select id="fl-district"><option value="">Все районы</option></select></div>
+          <div class="field"><label>Сортировка</label><select id="fl-sort"><option value="score">По совместимости</option><option value="price">По цене</option><option value="area">По площади</option></select></div>
+        </div>
+        <div class="row mt"><button class="btn btn-p" data-act="find">Найти объекты</button><button class="btn btn-o" data-act="find-reset">Сбросить</button><span class="sp"></span><span class="tag b" id="fl-count"></span></div>
+      </div>
+      <div class="grid g3 mt" id="objects-list"></div>
+    </section>
+
+    <section id="s-object" hidden>
+      <div class="head"><div><h2>Карточка объекта</h2><p>Условия проживания и бытовой регламент</p></div><button class="btn btn-o" data-act="go" data-id="objects">← К списку</button></div>
+      <div id="object-body"></div>
+    </section>
+
+    <section id="s-apps" hidden>
+      <div class="head"><div><h2>Мои заявки</h2><p>Статус рассмотрения заявок на заселение</p></div></div>
+      <div class="grid" id="apps-list"></div>
+    </section>
+
+    <section id="s-contract" hidden>
+      <div class="head"><div><h2>Договор и оферта</h2><p>Подписание правил проживания и резервирование депозита</p></div><button class="btn btn-o" data-act="go" data-id="apps">← К заявкам</button></div>
+      <div id="contract-body"></div>
+    </section>
+
+    <section id="s-act" hidden>
+      <div class="head"><div><h2>Акт приёмки</h2><p>Фиксация состояния помещения при заселении</p></div><button class="btn btn-o" data-act="go" data-id="contract">← К договору</button></div>
+      <div class="card">
+        <h3>Показания счётчиков</h3>
+        <p class="muted" id="act-obj" style="margin-bottom:14px"></p>
+        <form id="f-act">
+          <div class="fg">
+            <div class="field"><label>Электричество, кВт·ч</label><input name="electricity" type="number" required placeholder="12450"></div>
+            <div class="field"><label>Холодная вода, м³</label><input name="cold" type="number" required placeholder="120"></div>
+            <div class="field"><label>Горячая вода, м³</label><input name="hot" type="number" required placeholder="84"></div>
+            <div class="field"><label>Фотофиксация</label><button type="button" class="btn btn-o btn-w" data-act="act-photo">Прикрепить фото</button></div>
+            <div class="field full"><label>Замечания к состоянию помещения</label><textarea name="note" placeholder="Состояние удовлетворительное, мебель без повреждений"></textarea></div>
+          </div>
+          <div class="row"><button class="btn btn-p" type="submit">Сохранить акт приёмки</button><span class="muted" id="act-photos">Фото не прикреплены</span></div>
+        </form>
+      </div>
+    </section>
+
+    <section id="s-lots" hidden>
+      <div class="head"><div><h2>Мои лоты</h2><p>Объекты, размещённые для совместной аренды</p></div><button class="btn btn-p" data-act="lot-new">+ Создать лот</button></div>
+      <div class="grid g3" id="lots-list"></div>
+    </section>
+
+    <section id="s-lot-form" hidden>
+      <div class="head"><div><h2 id="lot-form-title">Новый лот</h2><p>Параметры объекта и бытовой регламент</p></div><button class="btn btn-o" data-act="go" data-id="lots">← К лотам</button></div>
+      <div class="card">
+        <form id="f-lot">
+          <input type="hidden" name="id">
+          <h3>Параметры объекта</h3>
+          <div class="fg">
+            <div class="field full"><label>Адрес</label><input name="address" required placeholder="ул. Менделеева, 137"></div>
+            <div class="field"><label>Район</label><select name="district"><option>Октябрьский район</option><option>Советский район</option><option>Кировский район</option><option>Дёмский район</option><option>Калининский район</option></select></div>
+            <div class="field"><label>Комнат в квартире</label><select name="rooms"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div>
+            <div class="field"><label>Площадь комнаты, м²</label><input name="area" type="number" required placeholder="14"></div>
+            <div class="field"><label>Доля аренды, ₽/мес</label><input name="price" type="number" required placeholder="18000"></div>
+            <div class="field"><label>Депозит, ₽</label><input name="deposit" type="number" required placeholder="9000"></div>
+            <div class="field"><label>График жильцов</label><select name="schedule"><option value="day">Дневная работа</option><option value="night">Ночные смены</option><option value="remote">Удалёнка</option><option value="any">Любой</option></select></div>
+          </div>
+          <h3 style="margin-top:18px">Бытовой регламент</h3>
+          <div class="fg">
+            <div class="field"><label>Тишина после</label><select name="quiet"><option>22:00</option><option selected>23:00</option><option>00:00</option></select></div>
+            <div class="field"><label>График уборки общих зон</label><select name="cleaning"><option value="weekly">Еженедельно</option><option value="biweekly">Раз в две недели</option><option value="roster">По очереди дежурств</option></select></div>
+            <div class="field"><label>Сплит-оплата ЖКХ</label><select name="split"><option value="equal">Поровну между жильцами</option><option value="area">Пропорционально площади</option><option value="meters">По индивидуальным счётчикам</option></select></div>
+          </div>
+          <div class="checks">
+            <label class="check"><input type="checkbox" name="smoking" checked> Курение разрешено</label>
+            <label class="check"><input type="checkbox" name="guests" checked> Гости с ночёвкой</label>
+            <label class="check"><input type="checkbox" name="pets"> Домашние животные</label>
+          </div>
+          <div class="row"><button class="btn btn-p" type="submit">Сохранить лот</button><button class="btn btn-g" type="submit" name="publish" value="1">Сохранить и опубликовать</button><button class="btn btn-o" type="button" data-act="go" data-id="lots">Отмена</button></div>
+        </form>
+      </div>
+    </section>
+
+    <section id="s-candidates" hidden>
+      <div class="head"><div><h2>Кандидаты</h2><p>Отбор соарендаторов по скоринг-баллу совместимости</p></div></div>
+      <div class="grid g3" id="candidates-list"></div>
+    </section>
+
+    <section id="s-contracts" hidden>
+      <div class="head"><div><h2>Договоры</h2><p>Цифровые договоры соаренды по вашим объектам</p></div></div>
+      <div class="grid" id="contracts-list"></div>
+    </section>
+
+    <section id="s-verify" hidden>
+      <div class="head"><div><h2>Верификация</h2><p>Очередь проверки документов пользователей</p></div><span class="tag a" id="verify-count"></span></div>
+      <div class="grid" id="verify-list"></div>
+    </section>
+
+    <section id="s-disputes" hidden>
+      <div class="head"><div><h2>Споры</h2><p>Арбитраж разногласий между соарендаторами</p></div><span class="tag a" id="disputes-count"></span></div>
+      <div class="grid" id="disputes-list"></div>
+    </section>
+
+    <section id="s-deposits" hidden>
+      <div class="head"><div><h2>Депозиты и блокировки</h2><p>Эскроу-счета, возврат средств и реестр нарушений</p></div><button class="btn btn-v" data-act="report">Сформировать отчёт</button></div>
+      <div class="card">
+        <h3>Эскроу-счета</h3>
+        <div class="tw"><table><thead><tr><th>Счёт</th><th>Пользователь</th><th>Объект</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr></thead><tbody id="deposits-body"></tbody></table></div>
+      </div>
+      <div class="card">
+        <h3>Чёрный список</h3>
+        <div class="tw"><table><thead><tr><th>Пользователь</th><th>Причина</th><th>Дата</th><th>Статус</th><th></th></tr></thead><tbody id="blacklist-body"></tbody></table></div>
+        <form id="f-block" class="row mt">
+          <div class="field" style="margin:0;flex:1;min-width:190px"><label>Пользователь</label><input name="user" required placeholder="Т.Н. Волков"></div>
+          <div class="field" style="margin:0;flex:2;min-width:210px"><label>Причина блокировки</label><input name="reason" required placeholder="3 просрочки платежа"></div>
+          <button class="btn btn-r" type="submit" style="align-self:flex-end">Заблокировать</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="s-journal" hidden>
+      <div class="head">
+        <div><h2>Журнал действий</h2><p>Аудит операций и хронометраж пользовательских сценариев</p></div>
+        <div class="row"><button class="btn btn-s btn-o" data-act="export" data-id="csv">CSV</button><button class="btn btn-s btn-o" data-act="export" data-id="jsonl">JSONL</button><button class="btn btn-s btn-o" data-act="export" data-id="txt">TXT</button><button class="btn btn-s btn-o" data-act="journal-clear">Очистить</button></div>
+      </div>
+      <div class="grid g3" id="journal-stats"></div>
+      <div class="card mt">
+        <h3>Время выполнения сценариев</h3>
+        <div class="tw"><table><thead><tr><th>Сценарий</th><th>Сеанс</th><th>Пользователь</th><th>Шагов</th><th>Время</th></tr></thead><tbody id="scenario-body"></tbody></table></div>
+      </div>
+      <div class="card">
+        <h3>Последние события</h3>
+        <div class="tw"><table><thead><tr><th>Время</th><th>Пользователь</th><th>Роль</th><th>Действие</th><th>Объект</th><th>Результат</th></tr></thead><tbody id="journal-body"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="s-profile" hidden>
+      <div class="head"><div><h2>Профиль</h2><p>Учётная запись и параметры участия</p></div></div>
+      <div id="profile-body"></div>
+    </section>
+
+  </main>
+  <footer class="foot">Шеринг-платформа © 2026 · Управление долевыми арендными обязательствами · Уфа</footer>
+</div>
+
+<div id="modal" class="modal" hidden></div>
+<div id="toasts" class="toasts"></div>
+<script src="script.js"></script>
+</body>
+</html>
