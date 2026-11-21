@@ -14,8 +14,8 @@
 | **Лабораторная работа №2** | ✅ Выполнено | [Просмотреть код (feature2lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature2lab) |
 | **Лабораторная работа №3** | ✅ Выполнено | [Просмотреть код (feature3lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature3lab) |
 | **Лабораторная работа №4** | ✅ Выполнено | [Просмотреть код (feature4lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature4lab) |
-| **Лабораторная работа №5** | ⏳ В планах | [Просмотреть код (feature5lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature5lab) |
-| **Лабораторная работа №6** | ⏳ В планах | [Просмотреть код (feature6lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature6lab) |
+| **Лабораторная работа №5** | ✅ Выполнено | [Просмотреть код (feature5lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature5lab) |
+| **Лабораторная работа №6** | ✅ Выполнено | [Просмотреть код (feature6lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature6lab) |
 | **Лабораторная работа №7** | ⏳ В планах | [Просмотреть код (feature7lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature7lab) |
 | **Лабораторная работа №8** | ⏳ В планах | [Просмотреть код (feature8lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature8lab) |
 | **Лабораторная работа №9** | ⏳ В планах | [Просмотреть код (feature9lab)](https://github.com/WorthyAA/PCHMI_Uust/tree/feature9lab) |
